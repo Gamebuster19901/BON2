@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
@@ -10,6 +11,7 @@ archivesBaseName = "BON"
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -58,6 +60,16 @@ fatJar.doFirst {
     from zipTree(jar.archivePath)
 }
 
-artifacts {
-    archives fatJar
+publish.dependsOn fatJar
+build.finalizedBy publish
+
+publishing{
+	publications {
+		mavenJava(MavenPublication) {
+			artifact fatJar
+		}
+	}
+	repositories {
+		mavenLocal()
+	}
 }
